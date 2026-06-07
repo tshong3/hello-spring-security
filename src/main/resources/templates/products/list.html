@@ -107,5 +107,36 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<footer class="text-center mt-5 mb-3 text-muted small">
+    학번: 2371080 | 성명: 홍태성 | 실습 수행:
+    <span id="practiceTime"></span>
+</footer>
+
+<script>
+    function updatePracticeTime() {
+        const now = new Date();
+
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const date = String(now.getDate()).padStart(2, '0');
+
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        const day = days[now.getDay()];
+
+        let hour = now.getHours();
+        const ampm = hour >= 12 ? '오후' : '오전';
+        hour = hour % 12;
+        if (hour === 0) hour = 12;
+
+        const minute = String(now.getMinutes()).padStart(2, '0');
+        const second = String(now.getSeconds()).padStart(2, '0');
+
+        document.getElementById('practiceTime').textContent =
+            `${year}년 ${month}월 ${date}일 (${day}) ${ampm} ${String(hour).padStart(2, '0')}:${minute}:${second}`;
+    }
+
+    updatePracticeTime();
+    setInterval(updatePracticeTime, 1000);
+</script>
 </body>
 </html>

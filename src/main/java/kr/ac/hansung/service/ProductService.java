@@ -29,22 +29,6 @@ public class ProductService {
                 .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다: " + id));
     }
 
-    @Transactional
-    public Product save(ProductDto dto) {
-        Product product = new Product(
-                dto.getName(),
-                dto.getPrice(),
-                dto.getDescription(),
-                dto.getStock()
-        );
-        return productRepository.save(product);
-    }
-
-    @Transactional
-    public void deleteById(Long id) {
-        productRepository.deleteById(id);
-    }
-
     @Transactional(readOnly = true)
     public Page<Product> getProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
@@ -53,5 +37,38 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Page<Product> searchProducts(String keyword, Pageable pageable) {
         return productRepository.findByNameContaining(keyword, pageable);
+    }
+
+    @Transactional
+    public Product save(ProductDto dto) {
+        Product product = new Product(
+                dto.getName(),
+                dto.getPrice(),
+                dto.getDescription(),
+                dto.getStock()
+        );
+
+        return productRepository.save(product);
+    }
+
+    @Transactional
+    public Product updateProduct(Long id, ProductDto dto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다: " + id));
+
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        product.setStock(dto.getStock());
+
+        if (dto.getDescription() != null) {
+            product.setDescription(dto.getDescription());
+        }
+
+        return product;
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
     }
 }
